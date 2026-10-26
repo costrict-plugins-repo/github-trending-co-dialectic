@@ -1,0 +1,38 @@
+{
+  "name": "co-dialectic",
+  "description": "Co-Dialectic v4.41.1 - Pre-compaction state capture, with the handoff reminder delivered on SessionStart(compact) where the model can act on it.",
+  "version": "4.44.2",
+  "license": "AGPL-3.0",
+  "depends_on_kernel": [
+    "brain-kernel >= 1.0.0",
+    "co-dialectic >= 4.16.0"
+  ],
+  "brain": {
+    "namespace": "co-dialectic",
+    "owned_paths": [
+      "feedback/**",
+      "personas/**",
+      "calibration-history.md",
+      "status-state.json"
+    ],
+    "writes_to_primitives": [
+      "references/tools-registry.md"
+    ],
+    "reads_from_primitives": [
+      "identity/handles.md",
+      "sessions/ledger/**"
+    ],
+    "reads_from_engines": [
+      "career-intelligence/skills-matrix.md"
+    ],
+    "linters": [
+      "feedback-contradictions",
+      "persona-drift",
+      "calibration-drift"
+    ]
+  },
+  "author": {
+    "name": "Anand Vallamsetla"
+  },
+  "_product_vs_solution_marker": "product-vs-solution: example \u2014 Anand authorship attribution is legitimate"
+}

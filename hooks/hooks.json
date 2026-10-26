@@ -1,0 +1,117 @@
+{
+  "description": "Co-Dialectic hooks — persistent survival + dev-cycle visibility + foundation invariant harnesses + auto-handoff before compaction. SessionStart auto-installs survival layer. UserPromptSubmit re-injects codi context + OS-grounded datetime (temporal-grounding harness). PreToolUse(Skill) emits plugin+version+scope banner. PreToolUse(Edit/Write/MultiEdit) fires the codify-or-mark-uncodified scan on .md files in invariant-carrier locations. Stop hooks verify the in-message status header liveness, fire the unit-of-work-commit reminder when workspace cwd has uncommitted changes, nudge skipped local verification / verify-access false blockers, and record never-blocking cost-routing nudges for next-prompt injection. PreCompact hook captures a deterministic pre-compaction packet + marker; SessionStart(matcher=compact) then delivers the codi-handoff reminder as plain stdout, after the summary exists and where the model can still act on it (XOS-259). TaskCompleted hook (v4.22.0+) runs the cross-family judge-panel cascade on agent-team task completions — opt-in via CODI_TEAM_JUDGE_GATE=1; exit 2 blocks completion and feeds jurors' flags back to the teammate.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/install-survival-layer.sh\"",
+            "timeout": 3000
+          },
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-start.sh\"",
+            "timeout": 5000
+          }
+        ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/postcompact-handoff-reminder.ts\"",
+            "timeout": 3000
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/user-prompt-submit.ts\"",
+            "timeout": 3000
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/skill-version-banner.ts\"",
+            "timeout": 2000
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/codify-scan-on-md-edit.ts\"",
+            "timeout": 7000
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/status-liveness-check.ts\"",
+            "timeout": 3000
+          },
+          {
+            "type": "command",
+            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/unit-of-work-check.ts\"",
+            "timeout": 5000
+          },
+          {
+            "type": "command",
+            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/local-test-nudge.ts\"",
+            "timeout": 4000
+          },
+          {
+            "type": "command",
+            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/cost-routing-nudge.ts\"",
+            "timeout": 4000
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/precompact-handoff.ts\"",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bun run \"${CLAUDE_PLUGIN_ROOT}/hooks/task-completed-judge-gate.ts\"",
+            "timeout": 120
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "_note": "Claude Code reads statusLine from user settings.json, not from plugin hooks.json, so this entry is DOCUMENTATION of the in-package script and is never executed from here. At install time, hooks/scripts/install-survival-layer.sh copies statusline.sh to a fixed resident location under the user codi state directory and points the real settings.json statusLine at that copy. That is deliberately version-independent, so an upgrade needs no version-sort gymnastics and the status line survives it. Do NOT write a versioned plugin-cache path in this field: it previously pinned 4.14.0, which was 30 minor versions stale, documented the exact anti-pattern the installer exists to avoid, and tripped the vendor-completeness HOST_ABSOLUTE_REFERENCE gate by naming a path outside the package.",
+    "type": "command",
+    "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/statusline.sh\""
+  }
+}
